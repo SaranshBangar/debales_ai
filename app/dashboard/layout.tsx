@@ -4,11 +4,20 @@ import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "../components/theme-toggle/ThemeToggle";
-import { LogOut, LayoutDashboard, MessageSquare, LineChart } from "lucide-react";
+import {
+  LogOut,
+  LayoutDashboard,
+  MessageSquare,
+  LineChart,
+} from "lucide-react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -36,7 +45,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <aside className="w-64 bg-white dark:bg-gray-800 shadow-md">
         <div className="h-full flex flex-col">
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white">Analytics Dashboard</h2>
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+              Analytics Dashboard
+            </h2>
           </div>
 
           <nav className="flex-1 p-4 space-y-2">
@@ -47,7 +58,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               <LayoutDashboard className="mr-3 h-5 w-5" />
               Dashboard
             </Link>
-            <Link href="/chat" className="flex items-center p-2 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+            <Link
+              href="/chat"
+              className="flex items-center p-2 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
               <MessageSquare className="mr-3 h-5 w-5" />
               Support Chat
             </Link>
@@ -60,12 +74,19 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   {session?.user?.name?.[0] || "U"}
                 </div>
                 <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-700 dark:text-white">{session?.user?.name || "User"}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{session?.user?.email || ""}</p>
+                  <p className="text-sm font-medium text-gray-700 dark:text-white">
+                    {session?.user?.name || "User"}
+                  </p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {session?.user?.email || ""}
+                  </p>
                 </div>
               </div>
 
-              <button onClick={handleSignOut} className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+              <button
+                onClick={handleSignOut}
+                className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
                 <LogOut className="h-5 w-5 text-gray-500 dark:text-gray-400" />
               </button>
             </div>
@@ -76,7 +97,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="flex-1">
         <header className="bg-white dark:bg-gray-800 shadow-sm">
           <div className="px-6 py-4 flex items-center justify-between">
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Dashboard</h1>
+            <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Dashboard
+            </h1>
             <div className="flex items-center space-x-4">
               <ModeToggle />
               <Link

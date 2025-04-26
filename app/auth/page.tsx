@@ -99,8 +99,12 @@ export default function AuthPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">Sign in to your account</h2>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Access your analytics dashboard</p>
+          <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+            Sign in to your account
+          </h2>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+            Access your analytics dashboard
+          </p>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
@@ -117,7 +121,11 @@ export default function AuthPage() {
                 className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                 placeholder="Email address"
               />
-              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -132,7 +140,11 @@ export default function AuthPage() {
                 className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
                 placeholder="Password"
               />
-              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-600">
+                  {errors.password.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -148,13 +160,17 @@ export default function AuthPage() {
               disabled={isLoading}
               className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-70 dark:bg-indigo-800 dark:hover:bg-indigo-900"
             >
-              {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {isLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : null}
               Sign in
             </button>
 
             <div className="flex items-center">
               <div className="flex-grow h-px bg-gray-300 dark:bg-gray-600"></div>
-              <span className="mx-4 text-sm text-gray-500 dark:text-gray-400">or</span>
+              <span className="mx-4 text-sm text-gray-500 dark:text-gray-400">
+                or
+              </span>
               <div className="flex-grow h-px bg-gray-300 dark:bg-gray-600"></div>
             </div>
 
@@ -182,12 +198,17 @@ export default function AuthPage() {
 
         <div className="mt-2 text-center text-sm">
           <p className="text-gray-600 dark:text-gray-400">
-            Demo credentials: <span className="font-medium">demo@example.com</span> / <span className="font-medium">demo12345</span>
+            Demo credentials:{" "}
+            <span className="font-medium">demo@example.com</span> /{" "}
+            <span className="font-medium">demo12345</span>
           </p>
         </div>
 
         <div className="mt-4 text-center text-sm">
-          <Link href="/" className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">
+          <Link
+            href="/"
+            className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+          >
             Back to Home
           </Link>
         </div>

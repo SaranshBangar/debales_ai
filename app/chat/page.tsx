@@ -39,7 +39,13 @@ export default function ChatPage() {
       setLastActivity(new Date());
     };
 
-    const events = ["mousedown", "mousemove", "keypress", "scroll", "touchstart"];
+    const events = [
+      "mousedown",
+      "mousemove",
+      "keypress",
+      "scroll",
+      "touchstart",
+    ];
 
     events.forEach((event) => {
       window.addEventListener(event, resetInactivityTimer);
@@ -102,13 +108,16 @@ export default function ChatPage() {
               setLoading(false);
             });
 
-            socketInstance.on("processingStatus", (status: { status: string }) => {
-              if (status.status === "processing") {
-                setLoading(true);
-              } else {
-                setLoading(false);
-              }
-            });
+            socketInstance.on(
+              "processingStatus",
+              (status: { status: string }) => {
+                if (status.status === "processing") {
+                  setLoading(true);
+                } else {
+                  setLoading(false);
+                }
+              },
+            );
 
             socketInstance.on("connect_error", (err: any) => {
               console.error("Socket connection error:", err);
@@ -165,7 +174,9 @@ export default function ChatPage() {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link href="/" className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white">Gemini AI Chat</h1>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                  Gemini AI Chat
+                </h1>
               </Link>
             </div>
             <div className="flex items-center gap-4">
@@ -192,15 +203,25 @@ export default function ChatPage() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md flex flex-col h-[calc(100vh-10rem)]">
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages.map((msg) => (
-              <div key={msg.id} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                key={msg.id}
+                className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
+              >
                 <div
                   className={`max-w-3/4 rounded-lg px-4 py-2 ${
-                    msg.sender === "user" ? "bg-indigo-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    msg.sender === "user"
+                      ? "bg-indigo-600 text-white"
+                      : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   }`}
                 >
                   <p>{msg.content}</p>
-                  <p className={`text-xs mt-1 ${msg.sender === "user" ? "text-indigo-200" : "text-gray-500 dark:text-gray-400"}`}>
-                    {msg.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  <p
+                    className={`text-xs mt-1 ${msg.sender === "user" ? "text-indigo-200" : "text-gray-500 dark:text-gray-400"}`}
+                  >
+                    {msg.timestamp.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </p>
                 </div>
               </div>
@@ -208,7 +229,10 @@ export default function ChatPage() {
             <div ref={messagesEndRef} />
           </div>
 
-          <form onSubmit={handleSendMessage} className="border-t border-gray-200 dark:border-gray-700 p-4">
+          <form
+            onSubmit={handleSendMessage}
+            className="border-t border-gray-200 dark:border-gray-700 p-4"
+          >
             <div className="flex items-center">
               <input
                 type="text"
@@ -222,15 +246,23 @@ export default function ChatPage() {
                 disabled={!message.trim() || loading || !connected}
                 className="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 dark:bg-indigo-700 dark:hover:bg-indigo-800"
               >
-                {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
+                {loading ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <Send className="h-5 w-5" />
+                )}
               </button>
             </div>
           </form>
 
           <div className="px-4 py-2 bg-gray-50 dark:bg-gray-900 rounded-b-lg border-t border-gray-200 dark:border-gray-700 text-sm">
             <div className="flex items-center">
-              <div className={`h-2 w-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"} mr-2`}></div>
-              <span className="text-gray-500 dark:text-gray-400">{connected ? "Connected to Gemini API" : "Disconnected"}</span>
+              <div
+                className={`h-2 w-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"} mr-2`}
+              ></div>
+              <span className="text-gray-500 dark:text-gray-400">
+                {connected ? "Connected to Gemini API" : "Disconnected"}
+              </span>
             </div>
           </div>
         </div>

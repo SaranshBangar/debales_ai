@@ -10,7 +10,9 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">Analytics Dashboard</h1>
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                Analytics Dashboard
+              </h1>
             </div>
             <div className="flex items-center">
               <ModeToggle />
@@ -22,10 +24,14 @@ export default function Home() {
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-16">
           <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
-            Powerful Analytics <span className="text-indigo-600 dark:text-indigo-500">Dashboard</span>
+            Powerful Analytics{" "}
+            <span className="text-indigo-600 dark:text-indigo-500">
+              Dashboard
+            </span>
           </h1>
           <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-500 dark:text-gray-400">
-            Monitor your metrics in real-time and get actionable insights with our analytics dashboard
+            Monitor your metrics in real-time and get actionable insights with
+            our analytics dashboard
           </p>
           <div className="mt-10 flex justify-center">
             <Link
@@ -45,9 +51,12 @@ export default function Home() {
                   <LayoutDashboard className="h-10 w-10 text-indigo-600 dark:text-indigo-500" />
                 </div>
                 <div className="ml-4">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">Interactive Dashboard</h3>
+                  <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                    Interactive Dashboard
+                  </h3>
                   <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Real-time analytics with customizable charts and metrics. Monitor user activity and performance at a glance.
+                    Real-time analytics with customizable charts and metrics.
+                    Monitor user activity and performance at a glance.
                   </p>
                 </div>
               </div>
@@ -69,9 +78,12 @@ export default function Home() {
                   <MessageSquare className="h-10 w-10 text-indigo-600 dark:text-indigo-500" />
                 </div>
                 <div className="ml-4">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">Support Chat</h3>
+                  <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                    Support Chat
+                  </h3>
                   <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Get immediate assistance from our support team. Our intelligent chat system will help answer your questions.
+                    Get immediate assistance from our support team. Our
+                    intelligent chat system will help answer your questions.
                   </p>
                 </div>
               </div>
@@ -90,7 +102,9 @@ export default function Home() {
 
       <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-sm text-gray-500 dark:text-gray-400">&copy; 2025 Analytics Dashboard. All rights reserved.</p>
+          <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+            &copy; 2025 Analytics Dashboard. All rights reserved.
+          </p>
         </div>
       </footer>
     </div>

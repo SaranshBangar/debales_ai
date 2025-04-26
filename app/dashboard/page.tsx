@@ -1,7 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+} from "recharts";
 import { io, Socket } from "socket.io-client";
 import { Activity, Users, AlertCircle, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
@@ -24,7 +34,9 @@ interface ActivityEvent {
 
 export default function Dashboard() {
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [connectionStatus, setConnectionStatus] = useState<"connected" | "disconnected" | "connecting">("connecting");
+  const [connectionStatus, setConnectionStatus] = useState<
+    "connected" | "disconnected" | "connecting"
+  >("connecting");
 
   const [activeUsers, setActiveUsers] = useState<number>(0);
   const [userChartData, setUserChartData] = useState<UserData[]>([]);
@@ -120,7 +132,10 @@ export default function Dashboard() {
       for (let i = 9; i >= 0; i--) {
         const time = new Date(now.getTime() - i * 60000);
         data.push({
-          timestamp: time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+          timestamp: time.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
           users: Math.floor(Math.random() * 50) + 10,
         });
       }
@@ -138,8 +153,20 @@ export default function Dashboard() {
     };
 
     const generateActivityEvent = () => {
-      const actions = ["logged in", "viewed page", "clicked button", "made purchase", "shared content"];
-      const users = ["User123", "Customer456", "Visitor789", "Member321", "Guest555"];
+      const actions = [
+        "logged in",
+        "viewed page",
+        "clicked button",
+        "made purchase",
+        "shared content",
+      ];
+      const users = [
+        "User123",
+        "Customer456",
+        "Visitor789",
+        "Member321",
+        "Guest555",
+      ];
 
       const newEvent: ActivityEvent = {
         user: users[Math.floor(Math.random() * users.length)],
@@ -166,7 +193,10 @@ export default function Dashboard() {
       newData.shift();
       const now = new Date();
       newData.push({
-        timestamp: now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        timestamp: now.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
         users: Math.floor(Math.random() * 50) + 10,
       });
 
@@ -194,15 +224,19 @@ export default function Dashboard() {
       <div className="flex items-center space-x-2">
         <div
           className={`h-3 w-3 rounded-full ${
-            connectionStatus === "connected" ? "bg-green-500" : connectionStatus === "connecting" ? "bg-yellow-500" : "bg-red-500"
+            connectionStatus === "connected"
+              ? "bg-green-500"
+              : connectionStatus === "connecting"
+                ? "bg-yellow-500"
+                : "bg-red-500"
           }`}
         />
         <span className="text-sm text-gray-500 dark:text-gray-400">
           {connectionStatus === "connected"
             ? "Connected to analytics server"
             : connectionStatus === "connecting"
-            ? "Connecting to analytics server..."
-            : "Disconnected from analytics server"}
+              ? "Connecting to analytics server..."
+              : "Disconnected from analytics server"}
         </span>
       </div>
 
@@ -213,8 +247,12 @@ export default function Dashboard() {
               <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Active Users</p>
-              <p className="text-2xl font-semibold text-gray-900 dark:text-white">{activeUsers}</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Active Users
+              </p>
+              <p className="text-2xl font-semibold text-gray-900 dark:text-white">
+                {activeUsers}
+              </p>
             </div>
           </div>
         </div>
@@ -225,9 +263,12 @@ export default function Dashboard() {
               <Activity className="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Page Views</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Page Views
+              </p>
               <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                {activityData.find((item) => item.name === "Pageviews")?.value || 0}
+                {activityData.find((item) => item.name === "Pageviews")
+                  ?.value || 0}
               </p>
             </div>
           </div>
@@ -239,9 +280,12 @@ export default function Dashboard() {
               <Activity className="h-6 w-6 text-purple-600 dark:text-purple-400" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Sessions</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Sessions
+              </p>
               <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                {activityData.find((item) => item.name === "Sessions")?.value || 0}
+                {activityData.find((item) => item.name === "Sessions")?.value ||
+                  0}
               </p>
             </div>
           </div>
@@ -253,9 +297,12 @@ export default function Dashboard() {
               <CheckCircle2 className="h-6 w-6 text-amber-600 dark:text-amber-400" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Conversions</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Conversions
+              </p>
               <p className="text-2xl font-semibold text-gray-900 dark:text-white">
-                {activityData.find((item) => item.name === "Conversions")?.value || 0}
+                {activityData.find((item) => item.name === "Conversions")
+                  ?.value || 0}
               </p>
             </div>
           </div>
@@ -264,12 +311,18 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
-          <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Active Users (Real-time)</h2>
+          <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+            Active Users (Real-time)
+          </h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={userChartData}>
                 <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                <XAxis dataKey="timestamp" tick={{ fontSize: 12 }} stroke="#888888" />
+                <XAxis
+                  dataKey="timestamp"
+                  tick={{ fontSize: 12 }}
+                  stroke="#888888"
+                />
                 <YAxis tick={{ fontSize: 12 }} stroke="#888888" />
                 <Tooltip
                   contentStyle={{
@@ -278,19 +331,32 @@ export default function Dashboard() {
                     color: "#333",
                   }}
                 />
-                <Line type="monotone" dataKey="users" stroke="#4f46e5" strokeWidth={2} dot={{ r: 3 }} activeDot={{ r: 6 }} />
+                <Line
+                  type="monotone"
+                  dataKey="users"
+                  stroke="#4f46e5"
+                  strokeWidth={2}
+                  dot={{ r: 3 }}
+                  activeDot={{ r: 6 }}
+                />
               </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
-          <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Activity Metrics</h2>
+          <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+            Activity Metrics
+          </h2>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={activityData}>
                 <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-                <XAxis dataKey="name" tick={{ fontSize: 12 }} stroke="#888888" />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 12 }}
+                  stroke="#888888"
+                />
                 <YAxis tick={{ fontSize: 12 }} stroke="#888888" />
                 <Tooltip
                   contentStyle={{
@@ -307,7 +373,9 @@ export default function Dashboard() {
       </div>
 
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm">
-        <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Activity Feed</h2>
+        <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+          Activity Feed
+        </h2>
         <div className="space-y-4">
           {activityFeed.length > 0 ? (
             activityFeed.map((event, index) => (
@@ -319,12 +387,16 @@ export default function Dashboard() {
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {event.user} {event.action}
                   </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{event.timestamp}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    {event.timestamp}
+                  </p>
                 </div>
               </div>
             ))
           ) : (
-            <p className="text-sm text-gray-500 dark:text-gray-400">No recent activity</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              No recent activity
+            </p>
           )}
         </div>
       </div>
