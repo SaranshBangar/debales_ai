@@ -1,63 +1,36 @@
-# Welcome to your Lovable project
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Project Overview
+## Getting Started
 
-A modern AI dashboard application built with React, TypeScript, and shadcn/ui components. This project features user authentication, real-time data visualization, and responsive design.
+First, run the development server:
 
-## How to clone and set up this project
-
-1. Clone the repository:
-
-```sh
-git clone https://github.com/SaranshBangar/debales_ai.git
-cd debales_ai
-```
-
-2. Install dependencies:
-
-```sh
-npm install
-```
-
-3. Start the development server:
-
-```sh
+```bash
 npm run dev
 # or
-bun run dev
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-The app will be available at `http://localhost:8080`
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Important Note About Environment Variables
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses Supabase for managing environment variables and secrets. You don't need to create any `.env` files. The necessary public configuration is already included in the project files.
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-- If you need to add API keys or secrets, use the Supabase dashboard
-- The Supabase configuration is already set up in `src/integrations/supabase/client.ts`
+## Learn More
 
-## Technologies Used
+To learn more about Next.js, take a look at the following resources:
 
-This project is built with:
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-- Supabase
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deployment
+## Deploy on Vercel
 
-To deploy this project:
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-1. Open [Lovable](https://lovable.dev/projects/a5e0e06b-2fdd-4b70-909f-48cb07384c00)
-2. Click on Share -> Publish
-
-## Custom Domain Setup
-
-You can connect a custom domain to your project:
-
-1. Navigate to Project > Settings > Domains
-2. Click Connect Domain
-3. Follow the instructions in [our documentation](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
