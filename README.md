@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# [Debales AI Chat Application](https://debales-ai.vercel.app/)
+
+This is a real-time user footfall application built with Next.js, featuring user authentication and WebSocket communication.
+
+**Deployed Application:** [https://debales-ai.vercel.app/](https://debales-ai.vercel.app/)
+
+## Features
+
+- **Real-time Chat:** Engage in live conversations using Socket.IO.
+- **User Authentication:** Secure login and session management powered by NextAuth.js.
+- **Modern UI:** Built with Tailwind CSS and Shadcn UI components.
+- **TypeScript:** Type safety throughout the application.
+
+## Tech Stack
+
+- **Framework:** [Next.js](https://nextjs.org/) (App Router)
+- **Authentication:** [NextAuth.js](https://next-auth.js.org/)
+- **Real-time Communication:** [Socket.IO](https://socket.io/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components:** [Shadcn UI](https://ui.shadcn.com/)
+- **Language:** [TypeScript](https://www.typescriptlang.org/)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js (v18 or later recommended)
+- npm, yarn, or pnpm
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation & Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1.  **Clone the repository:**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+    ```bash
+    git clone https://github.com/SaranshBangar/debales_ai.git ./
+    ```
 
-## Learn More
+2.  **Install dependencies:**
 
-To learn more about Next.js, take a look at the following resources:
+    ```bash
+    npm install
+    # or
+    yarn install
+    # or
+    pnpm install
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3.  **Set up environment variables:**
+    Create a `.env` file in the root directory and add the necessary environment variables (e.g., `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, database connection strings if applicable). Refer to the NextAuth.js documentation for required variables.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    ```env
+    NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
+    NEXTAUTH_SECRET=your_nextauth_secret_key
+    ```
 
-## Deploy on Vercel
+4.  **Run the development server:**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    ```bash
+    npm run dev
+    # or
+    yarn dev
+    # or
+    pnpm dev
+    ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5.  Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
+
+## Contact
+
+For questions or feedback, please reach out to [Saransh Bangar](https://www.saransh-bangar.xyz/)
