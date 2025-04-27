@@ -1,4 +1,4 @@
-# [Debales AI Chat Application](https://debales-ai.vercel.app/)
+# [Debales AI Assignment](https://debales-ai.vercel.app/)
 
 This is a real-time user footfall application built with Next.js, featuring user authentication and WebSocket communication.
 
