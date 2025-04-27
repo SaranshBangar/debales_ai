@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, UserIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
 const formSchema = z.object({
@@ -58,6 +58,7 @@ export default function AuthPage() {
       router.push("/dashboard");
       router.refresh();
     } catch (error) {
+      console.error("Login error:", error);
       setError("Something went wrong. Please try again.");
     } finally {
       setIsLoading(false);

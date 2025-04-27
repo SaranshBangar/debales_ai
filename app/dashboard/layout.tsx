@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "../components/theme-toggle/ThemeToggle";
-import { LogOut, LayoutDashboard, MessageSquare, LineChart } from "lucide-react";
+import { LogOut, LayoutDashboard, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 

@@ -37,6 +37,10 @@ export default function Dashboard() {
   const [activityFeed, setActivityFeed] = useState<ActivityEvent[]>([]);
 
   useEffect(() => {
+    console.log("Socket : ", socket);
+  }, [socket]);
+
+  useEffect(() => {
     const socketInitializer = async () => {
       try {
         const socket = io("http://localhost:3001", {
