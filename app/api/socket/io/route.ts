@@ -1,8 +1,61 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Server as IOServer } from "socket.io";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { Server } from "socket.io";
 
-let io: any;
+class SocketIOServer {
+  private static instance: IOServer;
+  private static isInitialized = false;
+
+  static getInstance() {
+    return this.instance;
+  }
+
+  static initialize(res: any) {
+    if (!this.isInitialized && res?.socket?.server) {
+      console.log("* Setting up Socket.io server");
+
+      const httpServer = res.socket.server;
+
+      this.instance = new IOServer(httpServer, {
+        path: "/api/socket/io",
+        addTrailingSlash: false,
+        cors: {
+          origin: "*",
+          methods: ["GET", "POST"],
+        },
+        pingTimeout: 60000,
+      });
+
+      res.socket.server.io = this.instance;
+      this.isInitialized = true;
+
+      this.instance.on("connection", (socket) => {
+        console.log("Client connected:", socket.id);
+
+        socket.emit("message", {
+          id: "welcome",
+          content: "Welcome to our AI-powered chat! How can I help you today?",
+          sender: "support",
+          timestamp: new Date(),
+        });
+
+        socket.on("userMessage", (message: string) => {
+          console.log(`Received message from ${socket.id}:`, message);
+
+          socket.emit("messageReceived", { status: "received" });
+
+          handleChatMessage(message, socket);
+        });
+
+        socket.on("disconnect", () => {
+          console.log("Client disconnected:", socket.id);
+        });
+      });
+    }
+
+    return this.instance;
+  }
+}
 
 const initGeminiClient = () => {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -20,7 +73,7 @@ async function handleChatMessage(message: string, socket: any) {
     if (!genAI) {
       socket.emit("message", {
         id: Date.now().toString(),
-        content: "Sorry, there's an issue connecting to the AI service.",
+        content: "Sorry, there's an issue connecting to the AI service. Please make sure the GEMINI_API_KEY environment variable is set.",
         sender: "support",
         timestamp: new Date(),
       });
@@ -31,16 +84,26 @@ async function handleChatMessage(message: string, socket: any) {
 
     const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-    const result = await model.generateContent(message);
-    const response = await result.response;
-    const text = response.text();
+    try {
+      const result = await model.generateContent(message);
+      const response = await result.response;
+      const text = response.text();
 
-    socket.emit("message", {
-      id: Date.now().toString(),
-      content: text,
-      sender: "support",
-      timestamp: new Date(),
-    });
+      socket.emit("message", {
+        id: Date.now().toString(),
+        content: text,
+        sender: "support",
+        timestamp: new Date(),
+      });
+    } catch (genAIError) {
+      console.error("Error with Gemini API:", genAIError);
+      socket.emit("message", {
+        id: Date.now().toString(),
+        content: "I'm having trouble processing your request. Please try again with a different question.",
+        sender: "support",
+        timestamp: new Date(),
+      });
+    }
 
     socket.emit("processingStatus", { status: "complete" });
   } catch (error) {
@@ -55,49 +118,19 @@ async function handleChatMessage(message: string, socket: any) {
   }
 }
 
-export async function GET(request: NextRequest) {
-  return new NextResponse("Socket.io server endpoint is ready", {
-    status: 200,
-  });
-}
+export async function GET(req: NextRequest) {
+  try {
+    const res = (req as any)?.socket?.server?.res || {};
 
-if (typeof window === "undefined") {
-  if (!io) {
-    const res = (global as any).res;
-    if (res && !res.socket?.server?.io) {
-      console.log("Setting up Socket.io");
-
-      const httpServer = res.socket.server;
-      io = new Server(httpServer, {
-        path: "/api/socket/io",
-        addTrailingSlash: false,
-      });
-
-      res.socket.server.io = io;
-
-      io.on("connection", (socket: any) => {
-        console.log("Client connected:", socket.id);
-
-        socket.emit("message", {
-          id: "welcome",
-          content: "Welcome to our AI-powered chat! How can I help you today?",
-          sender: "support",
-          timestamp: new Date(),
-        });
-
-        socket.on("userMessage", (message: string) => {
-          console.log("Received message:", message);
-
-          socket.emit("messageReceived", { status: "received" });
-
-          handleChatMessage(message, socket);
-        });
-
-        socket.on("disconnect", () => {
-          console.log("Client disconnected:", socket.id);
-        });
-      });
+    if (res?.socket?.server) {
+      SocketIOServer.initialize(res);
+      return new NextResponse("Socket.io server is running", { status: 200 });
     }
+
+    return new NextResponse("Socket.io initialization failed", { status: 500 });
+  } catch (error) {
+    console.error("Socket.io error:", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
 

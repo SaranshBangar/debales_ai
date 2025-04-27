@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import { ModeToggle } from "../components/theme-toggle/ThemeToggle";
-import { io, Socket } from "socket.io-client";
 import { Send, Loader2, LogOut } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useSocket } from "@/lib/useSocket";
 
 interface ChatMessage {
   id: string;
@@ -15,10 +15,14 @@ interface ChatMessage {
   timestamp: Date;
 }
 
+interface SuggestedPrompt {
+  id: string;
+  text: string;
+}
+
 export default function ChatPage() {
   const router = useRouter();
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [connected, setConnected] = useState(false);
+  const { socket, isConnected, error } = useSocket();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(false);
@@ -27,6 +31,13 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const INACTIVITY_TIMEOUT = 30000;
+
+  const suggestedPrompts: SuggestedPrompt[] = [
+    { id: "1", text: "How can I track my order?" },
+    { id: "2", text: "What are your business hours?" },
+    { id: "3", text: "Do you offer international shipping?" },
+    { id: "4", text: "I need help with a return" },
+  ];
 
   const handleSignOut = async () => {
     await signOut({ redirect: false });
@@ -39,13 +50,7 @@ export default function ChatPage() {
       setLastActivity(new Date());
     };
 
-    const events = [
-      "mousedown",
-      "mousemove",
-      "keypress",
-      "scroll",
-      "touchstart",
-    ];
+    const events = ["mousedown", "mousemove", "keypress", "scroll", "touchstart"];
 
     events.forEach((event) => {
       window.addEventListener(event, resetInactivityTimer);
@@ -79,82 +84,46 @@ export default function ChatPage() {
   }, [lastActivity, userInactive]);
 
   useEffect(() => {
-    fetch("/api/socket/io")
-      .then(() => {
-        const socketInitializer = async () => {
-          try {
-            const socketInstance = io({
-              path: "/api/socket/io",
-              addTrailingSlash: false,
-            });
+    if (!socket) return;
 
-            socketInstance.on("connect", () => {
-              console.log("Connected to socket server");
-              setConnected(true);
-            });
+    socket.on("message", (message: ChatMessage) => {
+      const chatMessage = {
+        ...message,
+        timestamp: new Date(message.timestamp),
+      };
 
-            socketInstance.on("disconnect", () => {
-              console.log("Disconnected from socket server");
-              setConnected(false);
-            });
+      setMessages((prevMessages) => [...prevMessages, chatMessage]);
+      setLoading(false);
+    });
 
-            socketInstance.on("message", (message: ChatMessage) => {
-              const chatMessage = {
-                ...message,
-                timestamp: new Date(message.timestamp),
-              };
+    socket.on("processingStatus", (status: { status: string }) => {
+      if (status.status === "processing") {
+        setLoading(true);
+      } else {
+        setLoading(false);
+      }
+    });
 
-              setMessages((prevMessages) => [...prevMessages, chatMessage]);
-              setLoading(false);
-            });
-
-            socketInstance.on(
-              "processingStatus",
-              (status: { status: string }) => {
-                if (status.status === "processing") {
-                  setLoading(true);
-                } else {
-                  setLoading(false);
-                }
-              },
-            );
-
-            socketInstance.on("connect_error", (err: any) => {
-              console.error("Socket connection error:", err);
-              setConnected(false);
-            });
-
-            setSocket(socketInstance);
-
-            return () => {
-              socketInstance.disconnect();
-            };
-          } catch (error) {
-            console.error("Failed to connect to chat server:", error);
-            setConnected(false);
-          }
-        };
-
-        socketInitializer();
-      })
-      .catch((err) => {
-        console.error("Error initializing socket connection:", err);
-        setConnected(false);
-      });
-  }, []);
+    return () => {
+      socket.off("message");
+      socket.off("processingStatus");
+    };
+  }, [socket]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSendMessage = async (e?: React.FormEvent, promptText?: string) => {
+    if (e) e.preventDefault();
 
-    if (!message.trim() || !socket || !connected) return;
+    const messageToSend = promptText || message;
+
+    if (!messageToSend.trim() || !socket || !isConnected) return;
 
     const newMessage: ChatMessage = {
       id: Date.now().toString(),
-      content: message,
+      content: messageToSend,
       sender: "user",
       timestamp: new Date(),
     };
@@ -164,7 +133,11 @@ export default function ChatPage() {
     setUserInactive(false);
     setLastActivity(new Date());
 
-    socket.emit("userMessage", message);
+    socket.emit("userMessage", messageToSend);
+  };
+
+  const handleSuggestedPrompt = (prompt: string) => {
+    handleSendMessage(undefined, prompt);
   };
 
   return (
@@ -174,9 +147,7 @@ export default function ChatPage() {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link href="/" className="flex-shrink-0 flex items-center">
-                <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                  Gemini AI Chat
-                </h1>
+                <h1 className="text-xl font-bold text-gray-900 dark:text-white">AI Chat Support</h1>
               </Link>
             </div>
             <div className="flex items-center gap-4">
@@ -203,21 +174,14 @@ export default function ChatPage() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md flex flex-col h-[calc(100vh-10rem)]">
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
-              >
+              <div key={msg.id} className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}>
                 <div
                   className={`max-w-3/4 rounded-lg px-4 py-2 ${
-                    msg.sender === "user"
-                      ? "bg-indigo-600 text-white"
-                      : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                    msg.sender === "user" ? "bg-indigo-600 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   }`}
                 >
                   <p>{msg.content}</p>
-                  <p
-                    className={`text-xs mt-1 ${msg.sender === "user" ? "text-indigo-200" : "text-gray-500 dark:text-gray-400"}`}
-                  >
+                  <p className={`text-xs mt-1 ${msg.sender === "user" ? "text-indigo-200" : "text-gray-500 dark:text-gray-400"}`}>
                     {msg.timestamp.toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -229,11 +193,21 @@ export default function ChatPage() {
             <div ref={messagesEndRef} />
           </div>
 
-          <form
-            onSubmit={handleSendMessage}
-            className="border-t border-gray-200 dark:border-gray-700 p-4"
-          >
-            <div className="flex items-center">
+          <div className="border-t border-gray-200 dark:border-gray-700 p-4">
+            <div className="flex flex-wrap gap-2 mb-3">
+              {suggestedPrompts.map((prompt) => (
+                <button
+                  key={prompt.id}
+                  onClick={() => handleSuggestedPrompt(prompt.text)}
+                  className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full text-gray-800 dark:text-gray-200"
+                  disabled={loading || !isConnected}
+                >
+                  {prompt.text}
+                </button>
+              ))}
+            </div>
+
+            <form onSubmit={handleSendMessage} className="flex items-center">
               <input
                 type="text"
                 value={message}
@@ -243,25 +217,19 @@ export default function ChatPage() {
               />
               <button
                 type="submit"
-                disabled={!message.trim() || loading || !connected}
+                disabled={!message.trim() || loading || !isConnected}
                 className="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 dark:bg-indigo-700 dark:hover:bg-indigo-800"
               >
-                {loading ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : (
-                  <Send className="h-5 w-5" />
-                )}
+                {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
               </button>
-            </div>
-          </form>
+            </form>
+          </div>
 
           <div className="px-4 py-2 bg-gray-50 dark:bg-gray-900 rounded-b-lg border-t border-gray-200 dark:border-gray-700 text-sm">
             <div className="flex items-center">
-              <div
-                className={`h-2 w-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"} mr-2`}
-              ></div>
+              <div className={`h-2 w-2 rounded-full ${isConnected ? "bg-green-500" : "bg-red-500"} mr-2`}></div>
               <span className="text-gray-500 dark:text-gray-400">
-                {connected ? "Connected to Gemini API" : "Disconnected"}
+                {isConnected ? "Connected to Gemini API" : error ? `Disconnected: ${error.message}` : "Disconnected"}
               </span>
             </div>
           </div>
