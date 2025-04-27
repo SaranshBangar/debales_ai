@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export function GET(req: NextRequest) {
+export function GET() {
   return new NextResponse("Please use /api/socket/io for Socket.io connections", {
     status: 200,
     headers: {

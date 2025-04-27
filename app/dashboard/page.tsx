@@ -38,7 +38,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     console.log("Socket : ", socket);
-  }, [socket]);
+  }, []);
 
   useEffect(() => {
     const socketInitializer = async () => {
